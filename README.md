@@ -1,2 +1,2 @@
 # SAA
-AWS SAA follow along labs
+AWS SAA Cloud Resume Challenge 
