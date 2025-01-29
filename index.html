@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Asfand Naveed</title>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="stylesheet.css" rel="stylesheet" />
+    <style>
+        body {
+            padding-left: 0;
+            transition: padding-left 0.3s;
+            font-size: 31px; /* Increased font size by 20% */
+            font-weight: 600; /* Thicker text */
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #2f4f4f; /* Dark forest green */
+            overflow-x: hidden;
+            padding-top: 20px;
+            padding-left: 10px;
+            z-index: 1000;
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 22px; /* Adjusted sidebar font size */
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+            text-align: center;
+            margin: 25px 0; /* Slightly more space between sections */
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        #main {
+            transition: margin-left 0.3s;
+            padding: 20px;
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            border-right: 2px solid #2f4f4f;
+        }
+
+        .section-title {
+            font-size: 56px; /* Increased section title size */
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2f4f4f; /* Dark Green */
+        }
+
+        .subheading {
+            font-size: 34px; /* Increased subheading size */
+            margin-bottom: 20px;
+        }
+
+        .resume-section-content {
+            margin-left: 0;
+            padding-right: 20px;
+        }
+
+        .fa-li {
+            font-size: 28px; /* Increased size of list items */
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid black;
+            margin: 30px 0;
+        }
+
+        .resume-section {
+            margin-bottom: 50px;
+        }
+
+        /* Spacing between bullet points */
+        .resume-section ul {
+            padding-left: 25px;
+            margin-top: 15px;
+        }
+
+        .resume-section ul li {
+            margin-bottom: 15px;
+        }
+
+        /* Sidebar buttons centered vertically */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sidebar a {
+            margin: 25px 0; /* Slightly more space between the sections */
+        }
+
+        /* Styling for the About section to take up the full page height */
+        #about {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Larger social media icons */
+        .social-icons a {
+            font-size: 45px; /* Increased social icons size */
+            margin: 15px;
+        }
+
+        /* Right Content Box */
+        .content-box {
+            width: 80%;
+            margin-left: 20px;
+        }
+
+        /* Increase the space between contact info and text */
+        .contact-info {
+            margin-bottom: 30px;
+        }
+
+        /* Right-aligned dates in Experience/Education */
+        .d-flex .flex-shrink-0 {
+            margin-left: auto;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            #main {
+                padding: 15px;
+            }
+        }
+
+        /* Night Mode styles */
+        .night-mode {
+            background-color: #1d1d1d;
+            color: white;
+        }
+
+        /* Button Styles */
+        .night-mode-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: transparent;
+            border: none;
+            font-size: 30px;
+            color: #f1f1f1;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .night-mode-btn .sun,
+        .night-mode-btn .moon {
+            display: none;
+        }
+
+        .night-mode-btn.sun-active .sun {
+            display: inline-block;
+            color: gray; /* Changed sun color to gray */
+        }
+
+        .night-mode-btn.moon-active .moon {
+            display: inline-block;
+        }
+
+    </style>
+</head>
+
+<body id="page-top">
+    <!-- Night Mode Button -->
+    <button class="night-mode-btn sun-active" id="nightModeToggle">
+        <i class="fas fa-sun sun"></i>
+        <i class="fas fa-moon moon"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+        <a href="#skills">Skills</a>
+        <a href="#certifications">Certifications</a>
+    </div>
+
+    <!-- Page Content -->
+    <div id="main">
+        <!-- About -->
+        <section class="resume-section" id="about">
+            <div class="resume-section-content content-box">
+                <h1 class="section-title">Asfand <span class="text-primary">Naveed</span></h1>
+                <div class="contact-info">
+                    <div class="subheading mb-5">
+                        London, UK · <a href="mailto:Asfandnaveed2001@gmail.com">Asfandnaveed2001@gmail.com</a> | +44 7760713876
+                    </div>
+                </div>
+                <p class="lead mb-5">
+                    A recent graduate from a prestigious University in London with an Astrophysics Degree, with a keen interest in Cloud Technologies. Excellent communication skills alongside a wide range of technical experience and knowledge. Strong programming skills and knowledge of a variety of technical concepts, ranging from Networks, Storage and Cloud Computing. With extensive hands-on, experimental and analytical thinking abilities gained whilst pursuing a STEM degree. Great time management, performance under pressure and a honed ability to comprehensively pick up technical concepts quickly. Eager to mix passion for technology with a role that appeals to my consultative and sales nature.
+                </p>
+                <div class="social-icons">
+                    <a class="social-icon" href="https://www.linkedin.com/in/asfandnaveed/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="social-icon" href="https://github.com/majorasfand" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </section>
+        <hr class="m-0" />
+        <!-- Experience -->
+        <section class="resume-section" id="experience">
+            <div class="resume-section-content content-box">
+                <h2 class="section-title">Experience</h2>
+                <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                    <div class="flex-grow-1">
+                        <h3 class="subheading">Data Analyst Intern</h3>
+                        <div class="subheading mb-3">NM Distributions Ltd <span class="text-primary">August - December 2023</span></div>
+                    </div>
+                </div>
+                <ul>
+                    <li>Analysed consumer trends and Amazon’s “buy box” algorithm through collecting thousands of data points on products and pricing to inform decisions on pricing strategy of listed products, resulting in a substantial increase in sales over the previous month.</li>
+                    <li>Utilised strong communication skills by calling wholesalers to negotiate lower prices on products, resulting in a 20% bulk discount and increasing profits by over £800 per month, developed interpersonal skills and an insight into how to do business globally.</li>
+                </ul>
+
+                <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                    <div class="flex-grow-1">
+                        <h3 class="subheading">Founder’s Associate</h3>
+                        <div class="subheading mb-3">Ink Social Marketing <span class="text-primary">June - July 2023</span></div>
+                    </div>
+                </div>
+                <ul>
+                    <li>Programmed a specialist sorting algorithm to categorise potential clients based on marketability and reduced prospecting times by 80%, acted as initial point of contact by cold calling, which developed interpersonal skills.</li>
+                    <li>Utilised teamwork and organisational skills to connect clients with different departments, reduced hold times on average.</li>
+                </ul>
+
+                <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                    <div class="flex-grow-1">
+                        <h3 class="subheading">Sales Associate</h3>
+                        <div class="subheading mb-3">Moss Bros Westfield <span class="text-primary">June - September 2021</span></div>
+                    </div>
+                </div>
+                <ul>
+                    <li>Stayed on top of regional and international fashion trends to make bespoke recommendations to customers on higher end menswear, combined specialist information with sales skills to routinely close deals of over £1000.</li>
+                    <li>Achieved time-pressured targets for customers with last-minute enquiries, utilised communication skills by calling other branches to deliver exotic items to various UK addresses, developed problem-solving skills and client relationship management.</li>
+                    <li>Multi-tasked efficiently under pressure to continuously replenish stock while fielding customer enquiries during especially busy periods, reduced customer wait times by 5 minutes on average as styles/sizes were always available.</li>
+                </ul>
+            </div>
+        </section>
+
+        <hr class="m-0" />
+        <!-- Education -->
+        <section class="resume-section" id="education">
+            <div class="resume-section-content content-box">
+                <h2 class="section-title">Education</h2>
+                
+                <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                    <div class="flex-grow-1">
+                        <div class="subheading mb-3">Royal Holloway University of London <span class="text-primary">2020 – 2024</span></div>
+                        <div>BSc Astrophysics</div>
+                        <div>Second Class Honours</div>
+                    </div>
+                </div>
+                <br><br> <!-- Two-line space -->
+
+                <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                    <div class="flex-grow-1">
+                        <div class="subheading mb-3">Featherstone High School <span class="text-primary">2018 – 2020</span></div>
+                        <div>A-Levels</div>
+                        <div>Maths B, Chemistry B, Physics C</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr />
+        <!-- Skills -->
+        <section class="resume-section" id="skills">
+            <div class="resume-section-content content-box">
+                <h2 class="section-title">Skills</h2>
+                <ul>
+                    <li><strong>Cloud Experience:</strong> Foundational knowledge of all AWS Concepts, with practical and hands-on experience launching EC2, S3 Buckets, IAM Policies alongside many more. Hosted a Grafana Dashboard on AWS that collects data from IoT Sensors for a home security project. Includes EC2 instances, and various Databases.</li>
+                    <li><strong>Programming Skills:</strong> Intermediate Python knowledge, gained during academic labs. Consists of several libraries (MATLAB, SciPy, NumPy, Pandas), which was used to analyse large datasets related to Galactic Clusters and for various scientific models. Received commendations from Course Professors for going above and beyond. Experimented with Configuring AWS via API, CLI, and UI. Experience with Linux, Web Dev (Node.js, HTML, CSS, Javascript), GitHub, Grafana.</li>
+                    <li><strong>Adaptability and Learning:</strong> Always strive to learn new things and teach myself about technical topics that intrigue me as demonstrated by my personal growth plan to achieve AWS Certifications.</li>
+                    <li><strong>Communication Skills:</strong> I have developed great public speaking and customer skills. Can adjust tone and content of my delivery to suit the audience, whether it’s sales or technical-focused. Excel in teamwork, ensuring effective collaboration and planning, as shown by my success in University Group projects and my previous Sales Roles.</li>
+                    <li><strong>Technical Passion:</strong> Keen interest in technical/mechanical areas. Regularly work on my car and have a scientific approach to troubleshooting and experimenting.</li>
+                </ul>
+            </div>
+        </section>
+
+        <hr />
+        <!-- Certifications -->
+        <section class="resume-section" id="certifications">
+            <div class="resume-section-content content-box">
+                <h2 class="section-title">Certifications</h2>
+                <ul>
+                    <li>AWS Certified Cloud Practitioner</li>
+                    <li>AWS Solutions Architect Associate (In Progress)</li>
+                    <li>AWS Certified AI Practitioner (Planned)</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <!-- Night Mode Toggle Script -->
+    <script>
+        const nightModeButton = document.getElementById('nightModeToggle');
+        nightModeButton.addEventListener('click', () => {
+            document.body.classList.toggle('night-mode');
+            nightModeButton.classList.toggle('sun-active');
+            nightModeButton.classList.toggle('moon-active');
+        });
+    </script>
+</body>
+
+</html>
