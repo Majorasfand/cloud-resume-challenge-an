@@ -144,12 +144,54 @@
 
         /* Responsive styles */
         @media screen and (max-width: 768px) {
+            body {
+                font-size: 16px; /* Adjusted font size for mobile */
+            }
+
             .sidebar {
-                width: 200px;
+                width: 100%; /* Full width on mobile */
+                height: auto; /* Auto height */
+                position: relative; /* Change from fixed to relative */
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            .sidebar a {
+                font-size: 18px; /* Adjusted font size for mobile */
+                margin: 10px 0; /* Reduced margin between links */
             }
 
             #main {
-                padding: 15px;
+                margin-left: 0; /* Remove margin for main content */
+                width: 100%; /* Full width on mobile */
+                padding: 10px; /* Adjusted padding */
+            }
+
+            .section-title {
+                font-size: 36px; /* Adjusted section title size for mobile */
+            }
+
+            .subheading {
+                font-size: 24px; /* Adjusted subheading size for mobile */
+            }
+
+            .resume-section-content {
+                padding-right: 10px; /* Adjusted padding */
+            }
+
+            .social-icons a {
+                font-size: 30px; /* Adjusted social icons size for mobile */
+            }
+
+            .content-box {
+                width: 100%; /* Full width on mobile */
+                margin-left: 0; /* Remove margin */
+            }
+
+            .night-mode-btn {
+                top: 10px; /* Adjusted position for mobile */
+                right: 10px; /* Adjusted position for mobile */
+                font-size: 24px; /* Adjusted font size for mobile */
             }
         }
 
@@ -185,7 +227,6 @@
         .night-mode-btn.moon-active .moon {
             display: inline-block;
         }
-
     </style>
 </head>
 
