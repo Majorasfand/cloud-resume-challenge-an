@@ -13,209 +13,274 @@ body {
 }
 
 /* Sidebar Styles */
-.sidebar {
-    height: 100vh; /* Full viewport height */
+#sideNav {
     width: 250px;
-    position: fixed; /* Fixed position */
+    height: 100vh;
+    position: fixed;
     top: 0;
     left: 0;
-    background-color: #2f4f4f; /* Dark forest green */
-    overflow-y: auto; /* Allow scrolling if content exceeds height */
+    background: #2E8B57; /* Forest green */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding-top: 20px;
-    padding-left: 10px;
-    z-index: 1000;
 }
 
-.sidebar a {
-    padding: 10px 15px;
-    text-decoration: none;
-    font-size: 22px; /* Adjusted sidebar font size */
-    color: #818181;
-    display: block;
-    transition: 0.3s;
+#sideNav .navbar-brand {
     text-align: center;
-    margin: 25px 0; /* Slightly more space between sections */
+    font-size: 22px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
 }
 
-.sidebar a:hover {
-    color: #f1f1f1;
+#sideNav ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 30px;
+    width: 100%;
 }
 
-/* Main Content Styles */
-#main {
-    margin-left: 250px; /* Adjust margin to account for sidebar */
-    padding: 20px;
-    width: calc(100% - 250px);
-    overflow-y: auto; /* Allow scrolling */
-    height: 100vh; /* Full viewport height */
+#sideNav ul li {
+    width: 100%;
 }
 
-.section-title {
-    font-size: 56px; /* Increased section title size */
+#sideNav ul li a {
+    display: block;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+#sideNav ul li a:hover,
+#sideNav ul li a.active {
+    background: #228B22; /* Darker green */
+    border-left: 4px solid #FFD700; /* Gold */
+}
+
+/* Main Content */
+.container-fluid {
+    margin-left: 250px;
+    padding: 40px;
+    max-width: 900px;
+}
+
+/* Sections */
+.resume-section {
+    padding: 60px 0;
+}
+
+.resume-section h1 {
+    font-size: 42px;
     font-weight: 700;
-    margin-bottom: 10px;
-    color: #2f4f4f; /* Dark Green */
 }
 
-.subheading {
-    font-size: 34px; /* Increased subheading size */
+.resume-section h2 {
+    font-size: 30px;
+    font-weight: 700;
+    border-bottom: 3px solid #2E8B57; /* Forest green */
+    display: inline-block;
+    padding-bottom: 5px;
     margin-bottom: 20px;
 }
 
-.resume-section-content {
-    margin-left: 0;
-    padding-right: 20px;
-}
-
-.fa-li {
-    font-size: 28px; /* Increased size of list items */
-}
-
-hr {
-    border: 0;
-    border-top: 1px solid black;
-    margin: 30px 0;
-}
-
-.resume-section {
-    margin-bottom: 50px;
-}
-
-/* Spacing between bullet points */
-.resume-section ul {
-    padding-left: 25px;
-    margin-top: 15px;
-}
-
-.resume-section ul li {
+.resume-section .subheading {
+    font-size: 18px;
+    color: #555;
     margin-bottom: 15px;
 }
 
-/* Sidebar buttons centered vertically */
-.sidebar {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.resume-section p,
+.resume-section ul {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #444;
 }
 
-.sidebar a {
-    margin: 25px 0; /* Slightly more space between the sections */
+/* Social Icons */
+.social-icons {
+    margin-top: 20px;
 }
 
-/* Styling for the About section to take up the full page height */
-#about {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-/* Larger social media icons */
 .social-icons a {
-    font-size: 45px; /* Increased social icons size */
-    margin: 15px;
+    display: inline-block;
+    font-size: 24px;
+    margin-right: 15px;
+    color: #2E8B57; /* Forest green */
+    transition: 0.3s;
 }
 
-/* Right Content Box */
-.content-box {
-    width: 80%;
-    margin-left: 20px;
+.social-icons a:hover {
+    color: #FFD700; /* Gold */
 }
 
-/* Increase the space between contact info and text */
-.contact-info {
-    margin-bottom: 30px;
-}
-
-/* Right-aligned dates in Experience/Education */
-.d-flex .flex-shrink-0 {
-    margin-left: auto;
-}
-
-/* Responsive styles */
-@media screen and (max-width: 768px) {
-    body {
-        font-size: 16px; /* Adjusted font size for mobile */
+/* Responsive Design */
+@media (max-width: 768px) {
+    #sideNav {
+        width: 100%;
+        height: auto;
+        position: relative;
+        text-align: center;
     }
 
-    .sidebar {
-        width: 100%; /* Full width on mobile */
-        height: auto; /* Auto height */
-        position: relative; /* Change from fixed to relative */
-        padding-top: 10px;
-        padding-bottom: 10px;
+    #sideNav ul {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
     }
 
-    .sidebar a {
-        font-size: 18px; /* Adjusted font size for mobile */
-        margin: 10px 0; /* Reduced margin between links */
+    #sideNav ul li {
+        display: inline-block;
     }
 
-    #main {
-        margin-left: 0; /* Remove margin for main content */
-        width: 100%; /* Full width on mobile */
-        padding: 10px; /* Adjusted padding */
-    }
-
-    .section-title {
-        font-size: 36px; /* Adjusted section title size for mobile */
-        white-space: nowrap; /* Prevent line break */
-    }
-
-    .subheading {
-        font-size: 24px; /* Adjusted subheading size for mobile */
-    }
-
-    .resume-section-content {
-        padding-right: 10px; /* Adjusted padding */
-    }
-
-    .social-icons a {
-        font-size: 30px; /* Adjusted social icons size for mobile */
-    }
-
-    .content-box {
-        width: 100%; /* Full width on mobile */
-        margin-left: 0; /* Remove margin */
-    }
-
-    .night-mode-btn {
-        top: 10px; /* Adjusted position for mobile */
-        right: 10px; /* Adjusted position for mobile */
-        font-size: 24px; /* Adjusted font size for mobile */
+    .container-fluid {
+        margin-left: 0;
+        padding: 20px;
     }
 }
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Muli', sans-serif;
+}
 
-/* Night Mode styles */
-.night-mode {
-    background-color: #1d1d1d;
+body {
+    display: flex;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Sidebar Styles */
+#sideNav {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #2E8B57; /* Forest green */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+#sideNav .navbar-brand {
+    text-align: center;
+    font-size: 22px;
     color: white;
+    font-weight: bold;
+    text-decoration: none;
 }
 
-/* Button Styles */
-.night-mode-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: transparent;
-    border: none;
+#sideNav ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 30px;
+    width: 100%;
+}
+
+#sideNav ul li {
+    width: 100%;
+}
+
+#sideNav ul li a {
+    display: block;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+#sideNav ul li a:hover,
+#sideNav ul li a.active {
+    background: #228B22; /* Darker green */
+    border-left: 4px solid #FFD700; /* Gold */
+}
+
+/* Main Content */
+.container-fluid {
+    margin-left: 250px;
+    padding: 40px;
+    max-width: 900px;
+}
+
+/* Sections */
+.resume-section {
+    padding: 60px 0;
+}
+
+.resume-section h1 {
+    font-size: 42px;
+    font-weight: 700;
+}
+
+.resume-section h2 {
     font-size: 30px;
-    color: #f1f1f1;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.night-mode-btn .sun,
-.night-mode-btn .moon {
-    display: none;
-}
-
-.night-mode-btn.sun-active .sun {
+    font-weight: 700;
+    border-bottom: 3px solid #2E8B57; /* Forest green */
     display: inline-block;
-    color: gray; /* Changed sun color to gray */
+    padding-bottom: 5px;
+    margin-bottom: 20px;
 }
 
-.night-mode-btn.moon-active .moon {
+.resume-section .subheading {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.resume-section p,
+.resume-section ul {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #444;
+}
+
+/* Social Icons */
+.social-icons {
+    margin-top: 20px;
+}
+
+.social-icons a {
     display: inline-block;
+    font-size: 24px;
+    margin-right: 15px;
+    color: #2E8B57; /* Forest green */
+    transition: 0.3s;
+}
+
+.social-icons a:hover {
+    color: #FFD700; /* Gold */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #sideNav {
+        width: 100%;
+        height: auto;
+        position: relative;
+        text-align: center;
+    }
+
+    #sideNav ul {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    #sideNav ul li {
+        display: inline-block;
+    }
+
+    .container-fluid {
+        margin-left: 0;
+        padding: 20px;
+    }
 }
