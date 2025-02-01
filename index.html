@@ -13,6 +13,8 @@
     <!-- Google fonts-->
     <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+    <!-- Visitor Counter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="stylesheet.css" rel="stylesheet" />
     <style>
@@ -142,6 +144,21 @@
             margin-left: auto;
         }
 
+        /* Visitor Counter Styles */
+        .visitor-counter {
+            text-align: center;
+            margin-top: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: #2f4f4f;
+        }
+
+        .visitor-counter span {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2f4f4f;
+        }
+
         /* Responsive styles */
         @media screen and (max-width: 768px) {
             body {
@@ -192,6 +209,14 @@
                 top: 10px; /* Adjusted position for mobile */
                 right: 10px; /* Adjusted position for mobile */
                 font-size: 24px; /* Adjusted font size for mobile */
+            }
+
+            .visitor-counter {
+                font-size: 18px;
+            }
+
+            .visitor-counter span {
+                font-size: 24px;
             }
         }
 
@@ -359,6 +384,11 @@
                 </ul>
             </div>
         </section>
+
+        <!-- Visitor Counter -->
+        <div class="visitor-counter">
+            <p>You are visitor number: <span id="visitor-count">0</span></p>
+        </div>
     </div>
 
     <!-- Night Mode Toggle Script -->
@@ -369,6 +399,13 @@
             nightModeButton.classList.toggle('sun-active');
             nightModeButton.classList.toggle('moon-active');
         });
+
+        // Fetch visitor count from API Gateway
+        fetch('https://5r3olofuwa.execute-api.eu-west-2.amazonaws.com/prod/count')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('visitor-count').innerText = data.Count;
+            });
     </script>
 </body>
 
