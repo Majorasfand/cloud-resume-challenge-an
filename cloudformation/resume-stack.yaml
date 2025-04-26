@@ -1,0 +1,172 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation template for AsfandNaveed Resume Project'
+
+Resources:
+  # S3 Bucket for Hosting
+  ResumeBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: cloud-resume-123
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+  # DynamoDB Table for Visitor Counter
+  VisitorCountTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: visitor-count
+      AttributeDefinitions:
+        - AttributeName: Id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: true
+
+  # Lambda Function
+  VisitorCounterLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: update-visitor-count
+      Runtime: python3.13
+      Handler: lambda_function.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          from decimal import Decimal
+          dynamodb = boto3.resource('dynamodb')
+          table = dynamodb.Table('visitor-count')
+          def lambda_handler(event, context):
+              response = table.get_item(Key={'Id': '1'})
+              count = response.get('Item', {}).get('Count', 0)
+              table.update_item(
+                  Key={'Id': '1'},
+                  UpdateExpression='SET #Count = :val',
+                  ExpressionAttributeNames={'#Count': 'Count'},
+                  ExpressionAttributeValues={':val': count + 1}
+              )
+              return {
+                  'statusCode': 200,
+                  'headers': {'Access-Control-Allow-Origin': '*'},
+                  'body': json.dumps({'Count': count + 1})
+              }
+
+  # Lambda Execution Role
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                Resource: !GetAtt VisitorCountTable.Arn
+        - PolicyName: BasicLambdaExecution
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
+
+  # API Gateway
+  VisitorCounterAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: visitor-count-api
+      Description: API for resume visitor counter
+
+  # API Gateway Resource/Method
+  CountResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref VisitorCounterAPI
+      ParentId: !GetAtt VisitorCounterAPI.RootResourceId
+      PathPart: count
+
+  CountMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref VisitorCounterAPI
+      ResourceId: !Ref CountResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 
+          - 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations'
+          - LambdaArn: !GetAtt VisitorCounterLambda.Arn
+
+  # CloudFront Distribution
+  ResumeDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          - DomainName: !GetAtt ResumeBucket.DomainName
+            Id: S3Origin
+            CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+        Enabled: true
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+
+  # Lambda Permission for API Gateway
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt VisitorCounterLambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 
+        - 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiId}/*/GET/count'
+        - ApiId: !Ref VisitorCounterAPI
+
+Outputs:
+  WebsiteURL:
+    Description: 'URL of your resume website'
+    Value: !GetAtt ResumeBucket.WebsiteURL
+  CloudFrontURL:
+    Description: 'CloudFront distribution domain name'
+    Value: !GetAtt ResumeDistribution.DomainName
