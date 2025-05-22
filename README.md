@@ -14,6 +14,31 @@ This project uses a serverless architecture with the following AWS services:
 - **DynamoDB**: NoSQL database
 - **GitHub Actions**: CI/CD pipeline
 
+## 💡 Implementation Choices
+
+### Infrastructure as Code
+This project uses AWS CloudFormation for infrastructure management because:
+- **Native AWS Integration**: Deep integration with AWS services
+- **Automatic Rollbacks**: Built-in rollback functionality on failure
+- **Change Sets**: Preview changes before deployment
+- **Stack Updates**: Managed updates with drift detection
+- **AWS Support**: Direct support from AWS
+
+### CI/CD Pipeline
+The deployment pipeline uses GitHub Actions to:
+1. Run automated tests
+2. Deploy CloudFormation stack
+3. Build and optimize website assets
+4. Sync content to S3
+5. Invalidate CloudFront cache
+
+### Security Considerations
+- CloudFront for HTTPS and edge security
+- S3 bucket policies for public read-only access
+- IAM roles with least privilege principle
+- API Gateway with rate limiting
+- DynamoDB with encryption at rest
+
 ## 🚀 Project Timeline
 
 ### Week 1: Planning & Setup (January 2024)
@@ -26,7 +51,7 @@ This project uses a serverless architecture with the following AWS services:
 - [x] S3 bucket configuration
 - [x] CloudFront distribution setup
 - [x] HTTPS security implementation
-- [x] Terraform infrastructure code
+- [x] CloudFormation template development
 
 ### Week 3: Backend Development
 - [x] DynamoDB table creation
@@ -60,7 +85,7 @@ This project uses a serverless architecture with the following AWS services:
 - REST API
 
 ### Infrastructure
-- Terraform
+- CloudFormation
 - AWS Services
 - GitHub Actions
 
@@ -76,12 +101,52 @@ This project uses a serverless architecture with the following AWS services:
 - Project Showcase
 - Development Timeline
 
-## 🚀 Deployment
+## 🚀 Local Development
 
-The website is automatically deployed through GitHub Actions when changes are pushed to the main branch. The workflow:
-1. Authenticates with AWS
-2. Syncs files to S3
-3. Invalidates CloudFront cache
+1. **Prerequisites**
+   - AWS CLI configured
+   - Python 3.9 or higher
+   - Node.js (for build tools)
+
+2. **Setup**
+   ```bash
+   # Clone the repository
+   git clone https://github.com/yourusername/cloud-resume-challenge.git
+   cd cloud-resume-challenge
+
+   # Deploy CloudFormation stack
+   aws cloudformation deploy \
+     --template-file cloudformation/resume-stack.yml \
+     --stack-name cloud-resume-dev \
+     --parameter-overrides Environment=dev \
+     --capabilities CAPABILITY_IAM
+
+   # Install dependencies
+   npm install
+   ```
+
+3. **Website Development**
+   ```bash
+   # Start local development server
+   npm start
+
+   # Build for production
+   npm run build
+   ```
+
+## 🔍 Testing
+
+- Unit tests for Lambda functions
+- Infrastructure validation with CloudFormation Linter
+- End-to-end testing with Cypress
+- Performance testing with Lighthouse
+
+## 📊 Monitoring
+
+- CloudWatch Metrics
+- API Gateway Access Logs
+- Lambda Function Logs
+- DynamoDB Performance Metrics
 
 ## 🌟 Future Improvements
 
@@ -90,6 +155,9 @@ The website is automatically deployed through GitHub Actions when changes are pu
 - [ ] Add more project showcases
 - [ ] Enhance performance monitoring
 - [ ] Add automated testing
+- [ ] Implement blue-green deployments
+- [ ] Add custom domain with Route53
+- [ ] Implement WAF for enhanced security
 
 ## 📝 License
 
@@ -99,4 +167,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [Cloud Resume Challenge](https://cloudresumechallenge.dev/) by Forrest Brazeal
 - AWS Documentation and Community
-- GitHub Actions Documentation 
+- GitHub Actions Documentation

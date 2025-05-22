@@ -1,12 +1,26 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS CloudFormation template for AsfandNaveed Resume Project'
+Description: 'AWS CloudFormation template for Cloud Resume Challenge'
+
+Parameters:
+  BucketName:
+    Type: String
+    Default: asfandnaveed.cloud
+    Description: Name of the S3 bucket for website hosting
+
+  Environment:
+    Type: String
+    Default: prod
+    AllowedValues:
+      - dev
+      - prod
+    Description: Environment name
 
 Resources:
   # S3 Bucket for Hosting
   ResumeBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: cloud-resume-123
+      BucketName: !Ref BucketName
       AccessControl: PublicRead
       WebsiteConfiguration:
         IndexDocument: index.html
@@ -17,11 +31,24 @@ Resources:
         IgnorePublicAcls: false
         RestrictPublicBuckets: false
 
+  # Bucket Policy
+  ResumeBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ResumeBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Join ['', [!GetAtt ResumeBucket.Arn, '/*']]
+
   # DynamoDB Table for Visitor Counter
   VisitorCountTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: visitor-count
+      TableName: !Sub visitor-counter-${Environment}
       AttributeDefinitions:
         - AttributeName: Id
           AttributeType: S
@@ -33,34 +60,51 @@ Resources:
         SSEEnabled: true
 
   # Lambda Function
-  VisitorCounterLambda:
+  VisitorCounterFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: update-visitor-count
-      Runtime: python3.13
-      Handler: lambda_function.lambda_handler
-      Role: !GetAtt LambdaExecutionRole.Arn
+      FunctionName: !Sub visitor-counter-${Environment}
+      Runtime: python3.9
+      Handler: index.lambda_handler
       Code:
         ZipFile: |
           import json
           import boto3
           from decimal import Decimal
+          
           dynamodb = boto3.resource('dynamodb')
-          table = dynamodb.Table('visitor-count')
+          table = dynamodb.Table('visitor-counter-prod')
+          
           def lambda_handler(event, context):
-              response = table.get_item(Key={'Id': '1'})
-              count = response.get('Item', {}).get('Count', 0)
-              table.update_item(
-                  Key={'Id': '1'},
-                  UpdateExpression='SET #Count = :val',
-                  ExpressionAttributeNames={'#Count': 'Count'},
-                  ExpressionAttributeValues={':val': count + 1}
-              )
-              return {
-                  'statusCode': 200,
-                  'headers': {'Access-Control-Allow-Origin': '*'},
-                  'body': json.dumps({'Count': count + 1})
-              }
+              try:
+                  response = table.update_item(
+                      Key={'Id': 'visitors'},
+                      UpdateExpression='ADD #count :incr',
+                      ExpressionAttributeNames={'#count': 'Count'},
+                      ExpressionAttributeValues={':incr': 1},
+                      ReturnValues='UPDATED_NEW'
+                  )
+                  
+                  count = response['Attributes']['Count']
+                  
+                  return {
+                      'statusCode': 200,
+                      'headers': {
+                          'Access-Control-Allow-Origin': '*',
+                          'Access-Control-Allow-Methods': 'GET',
+                          'Access-Control-Allow-Headers': 'Content-Type'
+                      },
+                      'body': json.dumps({'Count': int(count)})
+                  }
+              except Exception as e:
+                  print(f"Error: {str(e)}")
+                  return {
+                      'statusCode': 500,
+                      'body': json.dumps({'error': 'Failed to update counter'})
+                  }
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 10
+      MemorySize: 128
 
   # Lambda Execution Role
   LambdaExecutionRole:
@@ -98,10 +142,13 @@ Resources:
   VisitorCounterAPI:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: visitor-count-api
+      Name: !Sub visitor-counter-api-${Environment}
       Description: API for resume visitor counter
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
 
-  # API Gateway Resource/Method
+  # API Gateway Resource
   CountResource:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -109,6 +156,7 @@ Resources:
       ParentId: !GetAtt VisitorCounterAPI.RootResourceId
       PathPart: count
 
+  # API Gateway Method
   CountMethod:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -120,8 +168,24 @@ Resources:
         Type: AWS_PROXY
         IntegrationHttpMethod: POST
         Uri: !Sub 
-          - 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations'
-          - LambdaArn: !GetAtt VisitorCounterLambda.Arn
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - LambdaArn: !GetAtt VisitorCounterFunction.Arn
+
+  # API Gateway Deployment
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: CountMethod
+    Properties:
+      RestApiId: !Ref VisitorCounterAPI
+      Description: Production deployment
+
+  # API Gateway Stage
+  ApiStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref VisitorCounterAPI
+      DeploymentId: !Ref ApiDeployment
+      StageName: !Ref Environment
 
   # CloudFront Distribution
   ResumeDistribution:
@@ -129,9 +193,11 @@ Resources:
     Properties:
       DistributionConfig:
         Origins:
-          - DomainName: !GetAtt ResumeBucket.DomainName
+          - DomainName: !Select [1, !Split ["//", !GetAtt ResumeBucket.WebsiteURL]]
             Id: S3Origin
             CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
               OriginProtocolPolicy: http-only
         Enabled: true
         DefaultRootObject: index.html
@@ -148,6 +214,9 @@ Resources:
             QueryString: false
             Cookies:
               Forward: none
+          MinTTL: 0
+          DefaultTTL: 86400
+          MaxTTL: 31536000
         PriceClass: PriceClass_100
         ViewerCertificate:
           CloudFrontDefaultCertificate: true
@@ -156,17 +225,20 @@ Resources:
   LambdaPermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !GetAtt VisitorCounterLambda.Arn
+      FunctionName: !GetAtt VisitorCounterFunction.Arn
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub 
-        - 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiId}/*/GET/count'
-        - ApiId: !Ref VisitorCounterAPI
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${VisitorCounterAPI}/*/GET/count
 
 Outputs:
   WebsiteURL:
-    Description: 'URL of your resume website'
+    Description: 'URL of the website'
     Value: !GetAtt ResumeBucket.WebsiteURL
+
   CloudFrontURL:
     Description: 'CloudFront distribution domain name'
     Value: !GetAtt ResumeDistribution.DomainName
+
+  ApiEndpoint:
+    Description: 'API Gateway endpoint URL'
+    Value: !Sub https://${VisitorCounterAPI}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/count

@@ -1,0 +1,61 @@
+<!-- Architecture Diagram Component -->
+<div class="architecture-diagram glass-card">
+    <div class="horizontal-scroll-container">
+        <div class="scroll-content architecture-grid">
+            <!-- Source Control -->
+            <div class="architecture-step">
+                <div class="service-node" data-description="GitHub hosts the website's source code. Changes trigger GitHub Actions workflows for automated deployment.">
+                    <img src="assets/img/aws-icons/github.png" alt="GitHub" class="service-icon">
+                    <span class="service-name">GitHub</span>
+                    <div class="service-description"></div>
+                </div>
+                <div class="ci-cd-label">GitHub Actions</div>
+            </div>
+            
+            <!-- Storage -->
+            <div class="architecture-step">
+                <div class="service-node" data-description="S3 bucket hosts the static website files (HTML, CSS, JS). Configured for static website hosting with public read access.">
+                    <img src="assets/img/aws-icons/s3.png" alt="S3" class="service-icon">
+                    <span class="service-name">S3 Bucket</span>
+                    <div class="service-description"></div>
+                </div>
+            </div>
+            
+            <!-- CDN -->
+            <div class="architecture-step">
+                <div class="service-node" data-description="CloudFront CDN distributes the website globally, providing low-latency access and HTTPS security.">
+                    <img src="assets/img/aws-icons/cloudfront.png" alt="CloudFront" class="service-icon">
+                    <span class="service-name">CloudFront</span>
+                    <div class="service-description"></div>
+                </div>
+            </div>
+            
+            <!-- API Gateway -->
+            <div class="architecture-step">
+                <div class="service-node" data-description="REST API endpoint that handles visitor counter requests, providing a secure interface to Lambda functions.">
+                    <img src="assets/img/aws-icons/api-gateway.png" alt="API Gateway" class="service-icon">
+                    <span class="service-name">API Gateway</span>
+                    <div class="service-description"></div>
+                </div>
+            </div>
+            
+            <!-- Lambda -->
+            <div class="architecture-step">
+                <div class="service-node" data-description="Python-based Lambda function that processes visitor counter logic with error handling and CloudWatch logging.">
+                    <img src="assets/img/aws-icons/lambda.png" alt="Lambda" class="service-icon">
+                    <span class="service-name">Lambda</span>
+                    <div class="service-description"></div>
+                </div>
+            </div>
+            
+            <!-- DynamoDB -->
+            <div class="architecture-step">
+                <div class="service-node" data-description="NoSQL database storing visitor count with consistent reads/writes and automatic scaling.">
+                    <img src="assets/img/aws-icons/dynamodb.png" alt="DynamoDB" class="service-icon">
+                    <span class="service-name">DynamoDB</span>
+                    <div class="service-description"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
