@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cloud Resume Challenge | Asfand Naveed</title>
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon.ico">
+    
+    <!-- Font Preloading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@500;700&family=Orbitron:wght@500&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Main CSS -->
+    <link href="../stylesheet.css" rel="stylesheet">
+    <link href="project-styles.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+    <!-- Navigation -->
+    <nav class="project-nav glass-card">
+        <a href="../index.html" class="nav-back">
+            <i class="fas fa-arrow-left"></i>
+            Back to Portfolio
+        </a>
+        <div class="nav-title">Cloud Resume Challenge</div>
+        <button class="night-mode-btn" id="nightModeToggle" aria-label="Toggle dark mode">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="project-hero" data-bg="aws-dark">
+        <div class="container">
+            <h1>Cloud Resume Challenge</h1>
+            <div class="project-meta">
+                <div class="meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>January 2024</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-code-branch"></i>
+                    <a href="https://github.com/majorasfand/cloud-resume-challenge-an" target="_blank">View Source</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Overview -->
+    <section class="project-overview" data-bg="gradient-dark">
+        <div class="container">
+            <div class="section-header">
+                <h2><span class="section-number">01</span>OVERVIEW</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="overview-grid">
+                <div class="overview-card glass-card">
+                    <h3>Project Goals</h3>
+                    <ul class="goal-list">
+                        <li>Build a cloud-native resume website</li>
+                        <li>Implement serverless architecture</li>
+                        <li>Create CI/CD pipeline</li>
+                        <li>Practice Infrastructure as Code</li>
+                    </ul>
+                </div>
+                <div class="overview-card glass-card">
+                    <h3>Technologies Used</h3>
+                    <div class="tech-stack">
+                        <!-- Tech stack chips will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Architecture -->
+    <section class="project-architecture" data-bg="aws-darker">
+        <div class="container">
+            <div class="section-header">
+                <h2><span class="section-number">02</span>ARCHITECTURE</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="architecture-detailed glass-card">
+                <div class="architecture-description">
+                    <p>This project follows a serverless architecture pattern using various AWS services. Here's how they work together:</p>
+                </div>
+                
+                <div class="horizontal-scroll-container">
+                    <div class="scroll-content architecture-grid">
+                        <!-- Source Control -->
+                        <div class="architecture-step">
+                            <div class="service-node" data-description="GitHub hosts the website's source code and triggers automated deployments through GitHub Actions workflows when changes are pushed.">
+                                <img src="../assets/img/aws-icons/github.png" alt="GitHub" class="service-icon">
+                                <span class="service-name">GitHub</span>
+                                <div class="service-description"></div>
+                            </div>
+                            <div class="ci-cd-label">GitHub Actions</div>
+                        </div>
+                        
+                        <!-- Storage -->
+                        <div class="architecture-step">
+                            <div class="service-node" data-description="Amazon S3 hosts the static website files (HTML, CSS, JS) with versioning enabled and configured for static website hosting.">
+                                <img src="../assets/img/aws-icons/s3.png" alt="S3" class="service-icon">
+                                <span class="service-name">S3 Bucket</span>
+                                <div class="service-description"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- CDN -->
+                        <div class="architecture-step">
+                            <div class="service-node" data-description="CloudFront CDN provides global content delivery with low latency, HTTPS security, and caching for improved performance.">
+                                <img src="../assets/img/aws-icons/cloudfront.png" alt="CloudFront" class="service-icon">
+                                <span class="service-name">CloudFront</span>
+                                <div class="service-description"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- API Gateway -->
+                        <div class="architecture-step">
+                            <div class="service-node" data-description="REST API endpoint that handles visitor counter requests with API key authentication and usage plans for security.">
+                                <img src="../assets/img/aws-icons/api-gateway.png" alt="API Gateway" class="service-icon">
+                                <span class="service-name">API Gateway</span>
+                                <div class="service-description"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Lambda -->
+                        <div class="architecture-step">
+                            <div class="service-node" data-description="Python-based Lambda function that processes visitor counter logic with error handling and CloudWatch logging.">
+                                <img src="../assets/img/aws-icons/lambda.png" alt="Lambda" class="service-icon">
+                                <span class="service-name">Lambda</span>
+                                <div class="service-description"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- DynamoDB -->
+                        <div class="architecture-step">
+                            <div class="service-node" data-description="NoSQL database storing visitor count with consistent reads/writes and automatic scaling.">
+                                <img src="../assets/img/aws-icons/dynamodb.png" alt="DynamoDB" class="service-icon">
+                                <span class="service-name">DynamoDB</span>
+                                <div class="service-description"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="architecture-features">
+                    <h3>Key Features</h3>
+                    <ul class="feature-list">
+                        <li>Serverless architecture with zero server management</li>
+                        <li>Global content delivery through CloudFront CDN</li>
+                        <li>Automated CI/CD pipeline with GitHub Actions</li>
+                        <li>Infrastructure as Code using Terraform</li>
+                        <li>Cost-optimized with pay-per-use pricing</li>
+                        <li>Scalable and highly available design</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Progress -->
+    <section class="skills-progress" data-bg="gradient-blue">
+        <div class="container">
+            <div class="section-header">
+                <h2><span class="section-number">03</span>SKILLS GAINED</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="skills-grid">
+                <!-- Skill progress bars will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Development Journey -->
+    <section class="dev-journey" data-bg="aws-dark">
+        <div class="container">
+            <div class="section-header">
+                <h2><span class="section-number">04</span>DEVELOPMENT JOURNEY</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="timeline">
+                <!-- Timeline entries will be populated with blog content -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="../scripts.js"></script>
+    <script src="project-scripts.js"></script>
+</body>
+</html> 
