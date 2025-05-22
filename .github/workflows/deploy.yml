@@ -54,25 +54,23 @@ jobs:
               BucketName=asfandnaveed.cloud \
             --capabilities CAPABILITY_IAM
 
-      - name: Build and Optimize
-        run: |
-          npm ci
-          npm run build
-
       - name: Sync to S3
         run: |
-          aws s3 sync ./dist s3://asfandnaveed.cloud \
+          aws s3 sync . s3://asfandnaveed.cloud \
             --exclude ".git/*" \
             --exclude ".github/*" \
             --exclude "README.md" \
             --exclude "cloudformation/*" \
+            --exclude "package.json" \
+            --exclude "node_modules/*" \
+            --exclude ".vscode/*" \
             --include "index.html" \
-            --include "*.css" \
-            --include "*.js" \
-            --include "assets/**" \
-            --include "projects/**" \
+            --include "stylesheet.css" \
+            --include "scripts.js" \
+            --include "assets/**/*" \
+            --include "projects/**/*" \
+            --include "components/**/*" \
             --delete \
-            --size-only \
             --cache-control "max-age=86400"
 
       - name: Invalidate CloudFront
