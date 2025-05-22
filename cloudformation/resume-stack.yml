@@ -4,16 +4,8 @@ Description: 'AWS CloudFormation template for Cloud Resume Challenge'
 Parameters:
   BucketName:
     Type: String
-    Default: asfandnaveed.cloud
+    Default: cloud-resume-123
     Description: Name of the S3 bucket for website hosting
-
-  Environment:
-    Type: String
-    Default: prod
-    AllowedValues:
-      - dev
-      - prod
-    Description: Environment name
 
 Resources:
   # S3 Bucket for Hosting
@@ -44,154 +36,13 @@ Resources:
             Action: 's3:GetObject'
             Resource: !Join ['', [!GetAtt ResumeBucket.Arn, '/*']]
 
-  # DynamoDB Table for Visitor Counter
-  VisitorCountTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: !Sub visitor-counter-${Environment}
-      AttributeDefinitions:
-        - AttributeName: Id
-          AttributeType: S
-      KeySchema:
-        - AttributeName: Id
-          KeyType: HASH
-      BillingMode: PAY_PER_REQUEST
-      SSESpecification:
-        SSEEnabled: true
-
-  # Lambda Function
-  VisitorCounterFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      FunctionName: !Sub visitor-counter-${Environment}
-      Runtime: python3.9
-      Handler: index.lambda_handler
-      Code:
-        ZipFile: |
-          import json
-          import boto3
-          from decimal import Decimal
-          
-          dynamodb = boto3.resource('dynamodb')
-          table = dynamodb.Table('visitor-counter-prod')
-          
-          def lambda_handler(event, context):
-              try:
-                  response = table.update_item(
-                      Key={'Id': 'visitors'},
-                      UpdateExpression='ADD #count :incr',
-                      ExpressionAttributeNames={'#count': 'Count'},
-                      ExpressionAttributeValues={':incr': 1},
-                      ReturnValues='UPDATED_NEW'
-                  )
-                  
-                  count = response['Attributes']['Count']
-                  
-                  return {
-                      'statusCode': 200,
-                      'headers': {
-                          'Access-Control-Allow-Origin': '*',
-                          'Access-Control-Allow-Methods': 'GET',
-                          'Access-Control-Allow-Headers': 'Content-Type'
-                      },
-                      'body': json.dumps({'Count': int(count)})
-                  }
-              except Exception as e:
-                  print(f"Error: {str(e)}")
-                  return {
-                      'statusCode': 500,
-                      'body': json.dumps({'error': 'Failed to update counter'})
-                  }
-      Role: !GetAtt LambdaExecutionRole.Arn
-      Timeout: 10
-      MemorySize: 128
-
-  # Lambda Execution Role
-  LambdaExecutionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: DynamoDBAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - dynamodb:GetItem
-                  - dynamodb:UpdateItem
-                Resource: !GetAtt VisitorCountTable.Arn
-        - PolicyName: BasicLambdaExecution
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Resource: '*'
-
-  # API Gateway
-  VisitorCounterAPI:
-    Type: AWS::ApiGateway::RestApi
-    Properties:
-      Name: !Sub visitor-counter-api-${Environment}
-      Description: API for resume visitor counter
-      EndpointConfiguration:
-        Types:
-          - REGIONAL
-
-  # API Gateway Resource
-  CountResource:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      RestApiId: !Ref VisitorCounterAPI
-      ParentId: !GetAtt VisitorCounterAPI.RootResourceId
-      PathPart: count
-
-  # API Gateway Method
-  CountMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      RestApiId: !Ref VisitorCounterAPI
-      ResourceId: !Ref CountResource
-      HttpMethod: GET
-      AuthorizationType: NONE
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
-          - LambdaArn: !GetAtt VisitorCounterFunction.Arn
-
-  # API Gateway Deployment
-  ApiDeployment:
-    Type: AWS::ApiGateway::Deployment
-    DependsOn: CountMethod
-    Properties:
-      RestApiId: !Ref VisitorCounterAPI
-      Description: Production deployment
-
-  # API Gateway Stage
-  ApiStage:
-    Type: AWS::ApiGateway::Stage
-    Properties:
-      RestApiId: !Ref VisitorCounterAPI
-      DeploymentId: !Ref ApiDeployment
-      StageName: !Ref Environment
-
   # CloudFront Distribution
   ResumeDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
         Origins:
           - DomainName: !Select [1, !Split ["//", !GetAtt ResumeBucket.WebsiteURL]]
             Id: S3Origin
@@ -199,8 +50,6 @@ Resources:
               HTTPPort: 80
               HTTPSPort: 443
               OriginProtocolPolicy: http-only
-        Enabled: true
-        DefaultRootObject: index.html
         DefaultCacheBehavior:
           TargetOriginId: S3Origin
           ViewerProtocolPolicy: redirect-to-https
@@ -214,31 +63,17 @@ Resources:
             QueryString: false
             Cookies:
               Forward: none
-          MinTTL: 0
           DefaultTTL: 86400
           MaxTTL: 31536000
+          MinTTL: 0
         PriceClass: PriceClass_100
         ViewerCertificate:
           CloudFrontDefaultCertificate: true
 
-  # Lambda Permission for API Gateway
-  LambdaPermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !GetAtt VisitorCounterFunction.Arn
-      Action: lambda:InvokeFunction
-      Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${VisitorCounterAPI}/*/GET/count
-
 Outputs:
   WebsiteURL:
-    Description: 'URL of the website'
+    Description: URL for website hosted on S3
     Value: !GetAtt ResumeBucket.WebsiteURL
-
-  CloudFrontURL:
-    Description: 'CloudFront distribution domain name'
+  CloudFrontDomainName:
+    Description: Domain name of CloudFront distribution
     Value: !GetAtt ResumeDistribution.DomainName
-
-  ApiEndpoint:
-    Description: 'API Gateway endpoint URL'
-    Value: !Sub https://${VisitorCounterAPI}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/count
