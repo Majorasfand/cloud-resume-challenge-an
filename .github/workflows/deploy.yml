@@ -51,12 +51,12 @@ jobs:
             --stack-name cloud-resume-stack \
             --parameter-overrides \
               Environment=prod \
-              BucketName=asfandnaveed.cloud \
+              BucketName=cloud-resume-123 \
             --capabilities CAPABILITY_IAM
 
       - name: Sync to S3
         run: |
-          aws s3 sync . s3://asfandnaveed.cloud \
+          aws s3 sync . s3://cloud-resume-123 \
             --exclude ".git/*" \
             --exclude ".github/*" \
             --exclude "README.md" \
