@@ -22,7 +22,7 @@ jobs:
 
       - name: Sync to S3
         run: |
-          aws s3 sync . s3://cloud-resume-challenge-an \
+          aws s3 sync . s3://cloud-resume-123 \
             --exclude ".git/*" \
             --exclude ".github/*" \
             --exclude "README.md" \
